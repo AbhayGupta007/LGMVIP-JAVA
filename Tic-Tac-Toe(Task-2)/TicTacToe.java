@@ -16,21 +16,21 @@ public class TicTacToe implements ActionListener {
         frame.setSize(400, 400);
         frame.getContentPane().setBackground(new Color(50, 50, 50));
         frame.setLayout(new BorderLayout());
-        
+
         textField = new JLabel("Tic Tac Toe");
         textField.setFont(new Font("Arial", Font.BOLD, 24));
         textField.setForeground(Color.PINK);
         textField.setHorizontalAlignment(JLabel.CENTER);
         textField.setOpaque(true);
-        
+
         titlePanel = new JPanel();
         titlePanel.setLayout(new BorderLayout());
         titlePanel.setBounds(0, 0, 400, 100);
         titlePanel.add(textField);
-        
+
         buttonPanel = new JPanel();
         buttonPanel.setLayout(new GridLayout(3, 3));
-        
+
         buttons = new JButton[9];
         for (int i = 0; i < 9; i++) {
             buttons[i] = new JButton();
@@ -40,11 +40,11 @@ public class TicTacToe implements ActionListener {
             buttons[i].addActionListener(this);
             buttonPanel.add(buttons[i]);
         }
-        
+
         frame.add(titlePanel, BorderLayout.NORTH);
         frame.add(buttonPanel);
         frame.setVisible(true);
-        
+
         player1Turn = true;
         turnCount = 0;
     }
@@ -80,35 +80,36 @@ public class TicTacToe implements ActionListener {
     }
 
     private boolean checkForWin() {
-    String[] board = new String[9];
-    for (int i = 0; i < 9; i++) {
-        board[i] = buttons[i].getText();
+        String[] board = new String[9];
+        for (int i = 0; i < 9; i++) {
+            board[i] = buttons[i].getText();
+        }
+
+        // Define winning combinations
+        int[][] winCombinations = {
+                { 0, 1, 2 }, { 3, 4, 5 }, { 6, 7, 8 }, // Rows
+                { 0, 3, 6 }, { 1, 4, 7 }, { 2, 5, 8 }, // Columns
+                { 0, 4, 8 }, { 2, 4, 6 } // Diagonals
+        };
+
+        for (int[] combination : winCombinations) {
+            if (board[combination[0]].equals(board[combination[1]]) &&
+                    board[combination[0]].equals(board[combination[2]]) &&
+                    !board[combination[0]].equals("")) {
+                highlightWinningButtons(combination);
+                return true;
+            }
+        }
+
+        return false;
     }
 
-    // Define winning combinations
-    int[][] winCombinations = {
-        {0, 1, 2}, {3, 4, 5}, {6, 7, 8}, // Rows
-        {0, 3, 6}, {1, 4, 7}, {2, 5, 8}, // Columns
-        {0, 4, 8}, {2, 4, 6} // Diagonals
-    };
-
-    for (int[] combination : winCombinations) {
-        if (board[combination[0]].equals(board[combination[1]]) &&
-            board[combination[0]].equals(board[combination[2]]) &&
-            !board[combination[0]].equals("")) {
-            highlightWinningButtons(combination);
-            return true;
+    private void highlightWinningButtons(int[] combination) {
+        for (int index : combination) {
+            buttons[index].setBackground(Color.GREEN);
         }
     }
 
-    return false;
-}
-
-private void highlightWinningButtons(int[] combination) {
-    for (int index : combination) {
-        buttons[index].setBackground(Color.GREEN);
-    }
-}
     private void resetGame() {
         for (int i = 0; i < 9; i++) {
             buttons[i].setText("");
